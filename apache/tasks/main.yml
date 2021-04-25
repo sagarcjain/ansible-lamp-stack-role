@@ -1,0 +1,22 @@
+---
+# tasks file for apache
+- name: Installing Apache
+  yum: name=httpd state=installed
+
+- name: Start apache service
+  systemd: name=httpd state=started enabled=yes
+
+
+- name: Copying GIT repo content
+  git:
+    repo: https://github.com/kodekloudhub/learning-app-ecommerce.git
+    dest: /var/www/html/
+    clone: yes
+    force: yes
+
+- name : Finishing HTTPD tasks
+  command: "{{ item }}"
+  loop:
+    - sed -i 's/index.html/index.php/g' /etc/httpd/conf/httpd.conf
+    - sed -i 's/172.20.1.101/localhost/g' /var/www/html/index.php
+    - systemctl restart httpd

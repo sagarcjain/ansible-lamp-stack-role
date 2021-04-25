@@ -1,0 +1,8 @@
+---
+- name: Starting App Deployment
+  hosts: target2
+  roles:
+    - { role: misc, tags: misc }
+    - { role: apache, tags: httpd}
+    - { role: mysql, tags: mysql }
+    - { role: firewalld, tags: firewalld }

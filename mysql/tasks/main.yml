@@ -1,0 +1,31 @@
+---
+# tasks file for mysql
+- name: installing mysql
+  yum: name=mariadb-server state=installed
+
+- name: starting mysql service
+  systemd: name=mariadb state=started enabled=yes
+
+# Copy database dump file to remote host and restore it to database 'my_db'
+- name: Copy database dump file
+  copy:
+    src: /root/ansible/db-load-script.sql
+    dest: /tmp
+
+- name: Create a new database with name 'ecomdb'
+  mysql_db:
+    name: "{{ mysql_db_name }}"
+    state: present
+
+- name: Create database user
+  mysql_user:
+    name: "{{ mysql_user_name }}"
+    password: "{{ mysql_user_password }}"
+    priv: '*.*:ALL'
+    state: present
+
+- name: Restore database
+  mysql_db:
+    name: "{{ mysql_db_name }}"
+    state: import
+    target: /tmp/db-load-script.sql

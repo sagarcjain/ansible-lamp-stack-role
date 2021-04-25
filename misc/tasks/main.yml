@@ -1,0 +1,11 @@
+---
+# tasks file for misc
+
+- name: Installing php, git & curl packags..
+  yum:
+    name:
+      - php
+      - php-mysqlnd
+      - git
+      - curl
+    state: installed
